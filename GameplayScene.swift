@@ -29,12 +29,30 @@ class GameplayScene: SKScene {
         createSpaceship()
         createLabels()
         Timer.scheduledTimer(timeInterval: TimeInterval(0.5), target: self, selector: #selector(GameplayScene.incrementScore), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: TimeInterval(0), target: self, selector: #selector(GameplayScene.changeBackground), userInfo: nil, repeats: false)
+        
     }
     
     
+    func verifyShip() {
+        if (spaceShip.position.x > 330) {
+            spaceShip.position.x = 330
+        }
+        if (spaceShip.position.x < -330) {
+            spaceShip.position.x = -330
+        }
+        if (spaceShip.position.y > 500) {
+            spaceShip.position.y = 500
+        }
+        if (spaceShip.position.y < -600) {
+            spaceShip.position.y = -600
+        }
+        
+    }
     
     override func update(_ currentTime: TimeInterval) {
-    
+        verifyShip()
+
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -51,15 +69,40 @@ class GameplayScene: SKScene {
             let y2 = touch.location(in: self).y
             let y1 = touch.previousLocation(in: self).y
 
-            move = SKAction.moveBy(x: x2-x1, y: y2-y1, duration: TimeInterval(gameSpeed))
+            let moveX = x2-x1
+            let moveY = y2-y1
+//
+//            print(abs(spaceShip.position.x + moveX))
+//            if (abs(spaceShip.position.x + moveX) > 330) {
+//                moveX = 0
+//            }
+//            
+//            if (abs(spaceShip.position.y + moveY) > 610) {
+//                moveY = 0
+//            }
+            
+            move = SKAction.moveBy(x: moveX, y: moveY, duration: TimeInterval(gameSpeed))
 
             spaceShip.run(move)
+            
         }
     }
     
     func changeBackground() {
+//        backgroundColor = UIColorFromRGB(rgbValue: 0x3f7589)
+        run(SKAction.colorize(with: GameManager.instance.getColor(), colorBlendFactor: 1.0, duration: 3.0))
         
+        Timer.scheduledTimer(timeInterval: TimeInterval(3.0), target: self, selector: #selector(GameplayScene.changeBackground), userInfo: nil, repeats: false)
     }
+    
+//    func UIColorFromRGB(rgbValue: UInt) -> UIColor {
+//        return UIColor(
+//            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+//            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+//            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+//            alpha: CGFloat(1.0)
+//        )
+//    }
     
     
     func calculateDistance(touch : UITouch) -> CGFloat {
@@ -77,6 +120,7 @@ class GameplayScene: SKScene {
         spaceShip.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         spaceShip.position = CGPoint(x: 0, y: -400)
         spaceShip.setScale(0.4)
+        spaceShip.zPosition = 5
         
         self.addChild(spaceShip)
     }
@@ -86,7 +130,10 @@ class GameplayScene: SKScene {
         scoreLabel.position = CGPoint(x: 0, y: 560)
         scoreLabel.fontSize = 90
         scoreLabel.text = "\(score)"
+        scoreLabel.zPosition = 4
+        
         self.addChild(scoreLabel)
+    
     }
     
     
