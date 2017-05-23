@@ -8,8 +8,11 @@
 //
 
 import SpriteKit
+import Darwin
 
 class GameplayScene: SKScene {
+    var move = SKAction()
+    var gameSpeed = 0.4
     
     var spaceShip = SKSpriteNode()
     
@@ -34,19 +37,39 @@ class GameplayScene: SKScene {
     
     }
     
-    
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("||||||||||||||||")
-        print(touches)
-        
-        for touch in touches {
-            spaceShip.position = touch.location(in: self)
-        }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        //spaceShip.removeAction(forKey: "ShipMove")
     }
     
     
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        for touch in touches {
+            // locations
+            let x2 = touch.location(in: self).x
+            let x1 = touch.previousLocation(in: self).x
+            let y2 = touch.location(in: self).y
+            let y1 = touch.previousLocation(in: self).y
+
+            move = SKAction.moveBy(x: x2-x1, y: y2-y1, duration: TimeInterval(gameSpeed))
+
+            spaceShip.run(move)
+        }
+    }
     
+    func changeBackground() {
+        
+    }
+    
+    
+    func calculateDistance(touch : UITouch) -> CGFloat {
+        let x2 = touch.location(in: self).x
+        let x1 = touch.previousLocation(in: self).x
+        let y2 = touch.location(in: self).y
+        let y1 = touch.previousLocation(in: self).y
+        
+        return sqrt(pow((x2-x1), 2) + pow((y2 - y1), 2))
+    }
     
     func createSpaceship() {
         spaceShip = SKSpriteNode(imageNamed: "Spaceship")
