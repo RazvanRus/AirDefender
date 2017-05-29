@@ -8,35 +8,27 @@
 
 import SpriteKit
 
-struct ColliderType {
-    static let Player: UInt32 = 1
-    static let Obstacle: UInt32 = 2
-}
-
 class Comet: SKSpriteNode {
     
     var move = SKAction()
     var endingPoint = CGFloat()
-    
-    var cometSpeed = 1000.0
-    var cometSpeedPauseMultiplyer = 10.0
-    
+        
     func initialize() {
         createComet()
-        performMove()
     }
     
     func createComet() {
         
-        let startingPoint = GameManager.instance.randomBetweenNumbers(firstNumber: -325, secoundeNoumber: 325)
-        endingPoint = GameManager.instance.randomBetweenNumbers(firstNumber: -325, secoundeNoumber: 325)
+        let startingPoint = GameManager.instance.randomBetweenNumbers(firstNumber: CometManager.instance.startingPointMinX, secoundeNoumber: CometManager.instance.startingPointMaxX)
+        endingPoint = GameManager.instance.randomBetweenNumbers(firstNumber: CometManager.instance.startingPointMinX, secoundeNoumber: CometManager.instance.startingPointMaxX)
 
         self.name = "Comet"
         self.color = SKColor.white
         self.zPosition = 4
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        self.size = CGSize(width: 30, height: 30)
-        self.position = CGPoint(x: startingPoint, y: 750)
+        let cometSize = CometManager.instance.getCometSize()
+        self.size = CGSize(width: cometSize, height: cometSize)
+        self.position = CGPoint(x: startingPoint, y: CometManager.instance.startingPointY)
         self.physicsBody = SKPhysicsBody(circleOfRadius: self.size.width/2)
         self.physicsBody?.affectedByGravity = false
         self.physicsBody?.allowsRotation = false
@@ -47,15 +39,14 @@ class Comet: SKSpriteNode {
     
     func performMove() {
         let distance = calculateDistance(location: self.position)
-        print(distance)
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: Double(distance)/cometSpeed)
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: Double(distance)/CometManager.instance.getCometSpeed())
         self.run(move, withKey: "Move")
     }
     
     func gameIsPause() {
         self.removeAction(forKey: "Move")
         let distance = calculateDistance(location: self.position)
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: (Double(distance)/cometSpeed)*cometSpeedPauseMultiplyer)
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: (Double(distance)/CometManager.instance.getCometSpeed())*GameManager.instance.pauseMultiplier)
         self.run(move, withKey: "Move")
     }
     
@@ -63,15 +54,15 @@ class Comet: SKSpriteNode {
     func gameIsUnpaused() {
         self.removeAction(forKey: "Move")
         let distance = calculateDistance(location: self.position)
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: Double(distance)/cometSpeed)
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: Double(distance)/CometManager.instance.getCometSpeed())
         self.run(move, withKey: "Move")
     }
     
-    
+    // calculating distance between curent location and ending point location
     func calculateDistance(location: CGPoint) -> CGFloat {
         let x2 = endingPoint
         let x1 = location.x
-        let y2 = CGFloat(-750)
+        let y2 = CGFloat(CometManager.instance.endingPiontY)
         let y1 = location.y
         
         return sqrt(pow((x2-x1), 2) + pow((y2 - y1), 2))

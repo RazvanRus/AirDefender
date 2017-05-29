@@ -13,9 +13,8 @@ import Darwin
 class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     // spaceship variables
-    var spaceShip = SKSpriteNode()
-    var move = SKAction()
-    var shipSpeed = 0.4
+    var spaceShip = Spaceship()
+
 
     // game stage variables
     var isEndGame = false
@@ -31,13 +30,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     // obstacles variables
     var spawnObstacleTimer = Timer()
     var comets = [Comet]()
-    var obstacleSpawnSpeed = 2.0
     
-    // pannels
-    var endGamePannel = SKSpriteNode()
-    
-    var pauseGameTimeMultiplyer = 10.0
-
 
     
     ///// BIG BUG 
@@ -66,20 +59,9 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     // verifying if the ship is in the screen
     func verifyShip() {
-        if (spaceShip.position.x > 330) {
-            spaceShip.position.x = 330
-        }
-        if (spaceShip.position.x < -330) {
-            spaceShip.position.x = -330
-        }
-        if (spaceShip.position.y > 450) {
-            spaceShip.position.y = 450
-        }
-        if (spaceShip.position.y < -550) {
-            spaceShip.position.y = -550
-        }
-        
+        spaceShip.verifyPosition()
     }
+    
     
     func verifyComets() {
         for comet in comets {
@@ -102,7 +84,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    
+    /// update frame function
     override func update(_ currentTime: TimeInterval) {
         verifyShip()
     }
@@ -123,7 +105,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             startComet()
             
             spawnObstacleTimer.invalidate()
-            spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(obstacleSpawnSpeed), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: true)
+            spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
             
         }else if isEndGame {
             let scene = MainMenuScene(fileNamed: "MainMenuScene")
@@ -141,10 +123,10 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         isGamePaused = true
         alreadyTouching = false
         scoreTimer.invalidate()
-        scoreTimer = Timer.scheduledTimer(timeInterval: TimeInterval(scoreSpeed*pauseGameTimeMultiplyer), target: self, selector: #selector(GameplayScene.incrementScore), userInfo: nil, repeats: true)
+        scoreTimer = Timer.scheduledTimer(timeInterval: TimeInterval(scoreSpeed*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.incrementScore), userInfo: nil, repeats: true)
         //scene?.isPaused = true
         spawnObstacleTimer.invalidate()
-        spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(obstacleSpawnSpeed*pauseGameTimeMultiplyer), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: true)
+        spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
         spaceShip.removeAllActions()
     }
     
@@ -160,10 +142,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             let moveX = x2-x1
             let moveY = y2-y1
             
-            move = SKAction.moveBy(x: moveX, y: moveY, duration: TimeInterval(shipSpeed))
-
-            spaceShip.run(move)
-            
+            spaceShip.moveBy(x: moveX,y: moveY)
         }
     }
     ///////////////////////////////
@@ -192,7 +171,6 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.node?.name == "Spaceship" && secoundBody.node?.name == "Comet" {
             playerHitByComet()
-            print("dsadasda")
         }
     }
     ///////////////////////////////
@@ -222,26 +200,10 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     }
     
     
-    // creating ship  NEED CHANGE
+    // creating ship
     func createSpaceship() {        
-        spaceShip = SKSpriteNode(imageNamed: "Spaceship")
-        spaceShip.name = "Spaceship"
-        spaceShip.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        spaceShip.position = CGPoint(x: 0, y: -100)
-        spaceShip.setScale(0.4)
-        spaceShip.zPosition = 5
-        spaceShip.color = SKColor.white
-        
-        spaceShip.physicsBody = SKPhysicsBody(texture: SKTexture(imageNamed: "Spaceship"),
-                                                      size: CGSize(width: spaceShip.size.width,
-                                                                   height: spaceShip.size.height))
-        spaceShip.physicsBody?.allowsRotation = false
-        spaceShip.physicsBody?.affectedByGravity = false
-        
-        spaceShip.physicsBody?.categoryBitMask = ColliderType.Player
-        spaceShip.physicsBody?.collisionBitMask = ColliderType.Obstacle
-        spaceShip.physicsBody?.contactTestBitMask = ColliderType.Obstacle
-        
+        spaceShip = Spaceship(imageNamed: "Spaceship")
+        spaceShip.initialize()
         self.addChild(spaceShip)
     }
     
@@ -279,8 +241,19 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         // verify the comets and remove the bad ones.
         verifyComets()
 
+        
+        // calling timer for next obstacle spawn
+        if isGamePaused {
+            spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
+        }else {
+            spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
+        }
     }
     
+    
+    
+    
+    //// end game scenario
     
     // handeling when a comet hits the player
     func playerHitByComet() {
@@ -307,7 +280,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             GameManager.instance.setHighscore(highscore: score)
         }
         
-        endGamePannel = SKSpriteNode()
+        let endGamePannel = SKSpriteNode()
         
         endGamePannel.name = "EndGamePannel"
         endGamePannel.anchorPoint = CGPoint(x: 0.5, y: 0.5)
