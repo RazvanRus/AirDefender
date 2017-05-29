@@ -15,7 +15,7 @@ class GameManager {
     private init() {}
     
     var index = Int(0)
-    var colors = [SKColor.blue, SKColor.green, SKColor.red]
+    var colors = [SKColor.darkGray, SKColor.white]
     
     func getColor() -> SKColor {
         incrementIndex()
@@ -38,5 +38,8 @@ class GameManager {
         return UserDefaults.standard.integer(forKey: "Highscore")
     }
     
+    func randomBetweenNumbers(firstNumber: CGFloat,secoundeNoumber: CGFloat) -> CGFloat {
+        return CGFloat(arc4random()) / CGFloat(UINT32_MAX) * abs(firstNumber - secoundeNoumber) + min(firstNumber, secoundeNoumber)
+    }
     
 }
