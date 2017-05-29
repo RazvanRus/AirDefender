@@ -18,6 +18,8 @@ class Comet: SKSpriteNode {
     var move = SKAction()
     var endingPoint = CGFloat()
     
+    var cometSpeed = 1000.0
+    var cometSpeedPauseMultiplyer = 10.0
     
     func initialize() {
         createComet()
@@ -26,8 +28,8 @@ class Comet: SKSpriteNode {
     
     func createComet() {
         
-        let startingPoint = GameManager.instance.randomBetweenNumbers(firstNumber: -400, secoundeNoumber: 400)
-        endingPoint = GameManager.instance.randomBetweenNumbers(firstNumber: -400, secoundeNoumber: 400)
+        let startingPoint = GameManager.instance.randomBetweenNumbers(firstNumber: -325, secoundeNoumber: 325)
+        endingPoint = GameManager.instance.randomBetweenNumbers(firstNumber: -325, secoundeNoumber: 325)
 
         self.name = "Comet"
         self.color = SKColor.white
@@ -44,25 +46,36 @@ class Comet: SKSpriteNode {
     }
     
     func performMove() {
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: 2)
+        let distance = calculateDistance(location: self.position)
+        print(distance)
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: Double(distance)/cometSpeed)
         self.run(move, withKey: "Move")
     }
     
     func gameIsPause() {
         self.removeAction(forKey: "Move")
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: 5)
+        let distance = calculateDistance(location: self.position)
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: (Double(distance)/cometSpeed)*cometSpeedPauseMultiplyer)
         self.run(move, withKey: "Move")
-        print("#############")
     }
     
     
     func gameIsUnpaused() {
         self.removeAction(forKey: "Move")
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: 1)
+        let distance = calculateDistance(location: self.position)
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: -750), duration: Double(distance)/cometSpeed)
         self.run(move, withKey: "Move")
-        print("$$$$$$$$$$")
     }
     
+    
+    func calculateDistance(location: CGPoint) -> CGFloat {
+        let x2 = endingPoint
+        let x1 = location.x
+        let y2 = CGFloat(-750)
+        let y1 = location.y
+        
+        return sqrt(pow((x2-x1), 2) + pow((y2 - y1), 2))
+    }
     
     
     

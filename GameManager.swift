@@ -14,6 +14,8 @@ class GameManager {
     static let instance = GameManager()
     private init() {}
     
+    
+    // colors for bacjground
     var index = Int(0)
     var colors = [SKColor.darkGray, SKColor.white]
     
@@ -30,6 +32,8 @@ class GameManager {
         }
     }
     
+    
+    // seting and getting highscore , saved local
     func setHighscore(highscore: Int) {
         UserDefaults.standard.set(highscore, forKey: "Highscore")
     }
@@ -38,6 +42,8 @@ class GameManager {
         return UserDefaults.standard.integer(forKey: "Highscore")
     }
     
+    
+    // a random function between two numbers
     func randomBetweenNumbers(firstNumber: CGFloat,secoundeNoumber: CGFloat) -> CGFloat {
         return CGFloat(arc4random()) / CGFloat(UINT32_MAX) * abs(firstNumber - secoundeNoumber) + min(firstNumber, secoundeNoumber)
     }
