@@ -14,6 +14,8 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     // spaceship variables
     var spaceShip = Spaceship()
+    
+    var noOfTouches = 0
 
 
     // game stage variables
@@ -31,11 +33,6 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     var spawnObstacleTimer = Timer()
     var comets = [Comet]()
     
-
-    
-    ///// BIG BUG 
-    //// when you touch with one finger then thouch with another finger and relese the game will think the game is paused
-    //// even if your first finger is still playing.
     
     
     
@@ -95,6 +92,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     ///////////////////////////////
     ///////////////////////////////
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        noOfTouches += 1
         if !isEndGame && !alreadyTouching {
             isGamePaused = false
             alreadyTouching = true
@@ -119,15 +117,18 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        pauseComets()
-        isGamePaused = true
-        alreadyTouching = false
-        scoreTimer.invalidate()
-        scoreTimer = Timer.scheduledTimer(timeInterval: TimeInterval(scoreSpeed*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.incrementScore), userInfo: nil, repeats: true)
-        //scene?.isPaused = true
-        spawnObstacleTimer.invalidate()
-        spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
-        spaceShip.removeAllActions()
+        noOfTouches -= 1
+        if noOfTouches == 0 {
+            pauseComets()
+            isGamePaused = true
+            alreadyTouching = false
+            scoreTimer.invalidate()
+            scoreTimer = Timer.scheduledTimer(timeInterval: TimeInterval(scoreSpeed*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.incrementScore), userInfo: nil, repeats: true)
+            //scene?.isPaused = true
+            spawnObstacleTimer.invalidate()
+            spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
+            spaceShip.removeAllActions()
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {

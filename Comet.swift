@@ -12,6 +12,7 @@ class Comet: SKSpriteNode {
     
     var move = SKAction()
     var endingPoint = CGFloat()
+    var cometSpeed = CometManager.instance.getCometSpeed()
         
     func initialize() {
         createComet()
@@ -39,14 +40,14 @@ class Comet: SKSpriteNode {
     
     func performMove() {
         let distance = calculateDistance(location: self.position)
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: Double(distance)/CometManager.instance.getCometSpeed())
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: Double(distance)/cometSpeed)
         self.run(move, withKey: "Move")
     }
     
     func gameIsPause() {
         self.removeAction(forKey: "Move")
         let distance = calculateDistance(location: self.position)
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: (Double(distance)/CometManager.instance.getCometSpeed())*GameManager.instance.pauseMultiplier)
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: (Double(distance)/cometSpeed)*GameManager.instance.pauseMultiplier)
         self.run(move, withKey: "Move")
     }
     
@@ -54,7 +55,7 @@ class Comet: SKSpriteNode {
     func gameIsUnpaused() {
         self.removeAction(forKey: "Move")
         let distance = calculateDistance(location: self.position)
-        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: Double(distance)/CometManager.instance.getCometSpeed())
+        move = SKAction.move(to: CGPoint(x: endingPoint, y: CometManager.instance.endingPiontY), duration: Double(distance)/cometSpeed)
         self.run(move, withKey: "Move")
     }
     

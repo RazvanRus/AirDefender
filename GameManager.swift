@@ -14,7 +14,7 @@ class GameManager {
     static let instance = GameManager()
     private init() {}
     
-    var pauseMultiplier = 10.0
+    var pauseMultiplier = 5.0
     
     // colors for bacjground
     var index = Int(0)
