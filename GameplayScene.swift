@@ -40,6 +40,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         initialize()
+        CometManager.instance.reset()
     }
 
     // initialize all needed things
@@ -103,7 +104,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             startComet()
             
             spawnObstacleTimer.invalidate()
-            spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
+            spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(0.5), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
             
         }else if isEndGame {
             let scene = MainMenuScene(fileNamed: "MainMenuScene")
@@ -214,7 +215,6 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.position = CGPoint(x: 0, y: 560)
         scoreLabel.fontSize = 90
         scoreLabel.text = "\(score)"
-        scoreLabel.zPosition = 4
         
         self.addChild(scoreLabel)
     
@@ -258,6 +258,11 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     // handeling when a comet hits the player
     func playerHitByComet() {
+        
+        if !isGamePaused {
+            AbilitiesManager.instance.setAbilityPoints(points: AbilitiesManager.instance.getAbilityPoints() + score)
+        }
+        
         createEndGamePannel()
         pauseComets()
         isGamePaused = true
@@ -266,6 +271,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         spawnObstacleTimer.invalidate()
         spaceShip.removeAllActions()
         
+
         
         Timer.scheduledTimer(timeInterval: TimeInterval(0.5), target: self, selector: #selector(GameplayScene.endGame), userInfo: nil, repeats: false)
     }

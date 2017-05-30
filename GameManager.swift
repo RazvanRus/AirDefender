@@ -14,11 +14,15 @@ class GameManager {
     static let instance = GameManager()
     private init() {}
     
-    var pauseMultiplier = 5.0
+    
+    var pauseMultiplier = 10.0
     
     // colors for bacjground
     var index = Int(0)
     var colors = [SKColor.darkGray, SKColor.white]
+    
+    
+    
     
     func getColor() -> SKColor {
         incrementIndex()
@@ -38,10 +42,11 @@ class GameManager {
     func setHighscore(highscore: Int) {
         UserDefaults.standard.set(highscore, forKey: "Highscore")
     }
-    
     func getHighscore() -> Int {
         return UserDefaults.standard.integer(forKey: "Highscore")
     }
+    
+    
     
     
     // a random function between two numbers

@@ -16,6 +16,8 @@ class Comet: SKSpriteNode {
         
     func initialize() {
         createComet()
+        CometManager.instance.spawningRateIncrese()
+        CometManager.instance.speedIncrese()
     }
     
     func createComet() {

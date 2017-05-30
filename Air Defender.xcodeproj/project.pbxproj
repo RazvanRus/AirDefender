@@ -11,6 +11,8 @@
 		2925FB0B1EDC94F6005B44AE /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2925FB0A1EDC94F6005B44AE /* MainMenuScene.swift */; };
 		2925FB0D1EDCAC1C005B44AE /* Spaceship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2925FB0C1EDCAC1C005B44AE /* Spaceship.swift */; };
 		2925FB0F1EDCB0E9005B44AE /* CometManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2925FB0E1EDCB0E9005B44AE /* CometManager.swift */; };
+		2925FB111EDCC9C5005B44AE /* AbilitiesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2925FB101EDCC9C5005B44AE /* AbilitiesManager.swift */; };
+		2925FB131EDCCB1C005B44AE /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2925FB121EDCCB1C005B44AE /* Ability.swift */; };
 		2950DB811EC9EA8C0031B129 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2950DB801EC9EA8C0031B129 /* AppDelegate.swift */; };
 		2950DB851EC9EA8C0031B129 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2950DB841EC9EA8C0031B129 /* Actions.sks */; };
 		2950DB891EC9EA8C0031B129 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2950DB881EC9EA8C0031B129 /* GameViewController.swift */; };
@@ -22,6 +24,8 @@
 		2950DBB71EC9EC710031B129 /* GameplayScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2950DBB61EC9EC710031B129 /* GameplayScene.sks */; };
 		2950DBBA1EC9EC960031B129 /* GameplayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2950DBB91EC9EC960031B129 /* GameplayScene.swift */; };
 		29C23D381ED4A170009F11DD /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C23D371ED4A170009F11DD /* GameManager.swift */; };
+		29F098901EDDA3D900DF9FE9 /* AbilitiesScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 29F0988F1EDDA3D900DF9FE9 /* AbilitiesScene.sks */; };
+		29F098921EDDA3E500DF9FE9 /* AbilitiesScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F098911EDDA3E500DF9FE9 /* AbilitiesScene.swift */; };
 		29F0D2001ED5AED5003AB718 /* Comet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F0D1FF1ED5AED5003AB718 /* Comet.swift */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +51,8 @@
 		2925FB0A1EDC94F6005B44AE /* MainMenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
 		2925FB0C1EDCAC1C005B44AE /* Spaceship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spaceship.swift; sourceTree = "<group>"; };
 		2925FB0E1EDCB0E9005B44AE /* CometManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CometManager.swift; sourceTree = "<group>"; };
+		2925FB101EDCC9C5005B44AE /* AbilitiesManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbilitiesManager.swift; sourceTree = "<group>"; };
+		2925FB121EDCCB1C005B44AE /* Ability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ability.swift; sourceTree = "<group>"; };
 		2950DB7D1EC9EA8C0031B129 /* Air Defender.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Air Defender.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2950DB801EC9EA8C0031B129 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2950DB841EC9EA8C0031B129 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
@@ -64,6 +70,8 @@
 		2950DBB61EC9EC710031B129 /* GameplayScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameplayScene.sks; sourceTree = "<group>"; };
 		2950DBB91EC9EC960031B129 /* GameplayScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameplayScene.swift; sourceTree = "<group>"; };
 		29C23D371ED4A170009F11DD /* GameManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
+		29F0988F1EDDA3D900DF9FE9 /* AbilitiesScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = AbilitiesScene.sks; sourceTree = "<group>"; };
+		29F098911EDDA3E500DF9FE9 /* AbilitiesScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbilitiesScene.swift; sourceTree = "<group>"; };
 		29F0D1FF1ED5AED5003AB718 /* Comet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +159,7 @@
 			children = (
 				2950DBB61EC9EC710031B129 /* GameplayScene.sks */,
 				2925FB081EDC94EA005B44AE /* MainMenuScene.sks */,
+				29F0988F1EDDA3D900DF9FE9 /* AbilitiesScene.sks */,
 			);
 			name = Scenes;
 			sourceTree = "<group>";
@@ -160,6 +169,7 @@
 			children = (
 				2950DBB91EC9EC960031B129 /* GameplayScene.swift */,
 				2925FB0A1EDC94F6005B44AE /* MainMenuScene.swift */,
+				29F098911EDDA3E500DF9FE9 /* AbilitiesScene.swift */,
 			);
 			name = SceneClasses;
 			sourceTree = "<group>";
@@ -179,6 +189,7 @@
 			children = (
 				29C23D371ED4A170009F11DD /* GameManager.swift */,
 				2925FB0E1EDCB0E9005B44AE /* CometManager.swift */,
+				2925FB101EDCC9C5005B44AE /* AbilitiesManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -188,6 +199,7 @@
 			children = (
 				29F0D1FF1ED5AED5003AB718 /* Comet.swift */,
 				2925FB0C1EDCAC1C005B44AE /* Spaceship.swift */,
+				2925FB121EDCCB1C005B44AE /* Ability.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -305,6 +317,7 @@
 				2950DB8C1EC9EA8C0031B129 /* Main.storyboard in Resources */,
 				2950DB8E1EC9EA8C0031B129 /* Assets.xcassets in Resources */,
 				2950DB911EC9EA8C0031B129 /* LaunchScreen.storyboard in Resources */,
+				29F098901EDDA3D900DF9FE9 /* AbilitiesScene.sks in Resources */,
 				2950DBB71EC9EC710031B129 /* GameplayScene.sks in Resources */,
 				2925FB091EDC94EA005B44AE /* MainMenuScene.sks in Resources */,
 				2950DB851EC9EA8C0031B129 /* Actions.sks in Resources */,
@@ -333,10 +346,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				2925FB0F1EDCB0E9005B44AE /* CometManager.swift in Sources */,
+				29F098921EDDA3E500DF9FE9 /* AbilitiesScene.swift in Sources */,
 				2925FB0B1EDC94F6005B44AE /* MainMenuScene.swift in Sources */,
 				2950DBBA1EC9EC960031B129 /* GameplayScene.swift in Sources */,
+				2925FB111EDCC9C5005B44AE /* AbilitiesManager.swift in Sources */,
 				2950DB891EC9EA8C0031B129 /* GameViewController.swift in Sources */,
 				2925FB0D1EDCAC1C005B44AE /* Spaceship.swift in Sources */,
+				2925FB131EDCCB1C005B44AE /* Ability.swift in Sources */,
 				29C23D381ED4A170009F11DD /* GameManager.swift in Sources */,
 				2950DB811EC9EA8C0031B129 /* AppDelegate.swift in Sources */,
 				29F0D2001ED5AED5003AB718 /* Comet.swift in Sources */,

@@ -15,20 +15,46 @@ class CometManager {
     static let instance = CometManager()
     private init() {}
     
+    var procent = 0.05
+    
     var minCometSpeed = 750.0
-    var maxCometSpeed = 2000.0
+    var maxCometSpeed = 1750.0
     
     var startingPointMinX = CGFloat(-325)
     var startingPointMaxX = CGFloat(325)
     var startingPointY = CGFloat(750)
     var endingPiontY = CGFloat(-750)
     
-    var minCometSize = 20
+    var minCometSize = 25
     var maxCometSize = 50
     
-    var minCometSpawnRate = 1
-    var maxCometSpawnRate = 2
+    var minCometSpawnRate = 0.75
+    var maxCometSpawnRate = 1.5
 
+    
+    func reset()  {
+        procent = 0.01
+        if getMinCometSpeed() == 0 {
+            minCometSpeed = 750.0
+            maxCometSpeed = 1750.0
+        
+            minCometSpawnRate = 0.75
+            maxCometSpawnRate = 1.5
+            
+            setMinCometSpeed(speed: minCometSpeed)
+            setMaxCometSpeed(speed: maxCometSpeed)
+            
+            setMinSpawnRate(spawnRate: minCometSpawnRate)
+            setMaxSpawnRate(spawnRate: maxCometSpawnRate)
+        }else {
+            minCometSpeed = getMinCometSpeed()
+            maxCometSpeed = getMaxCometSpeed()
+            
+            minCometSpawnRate = getMinSpawnRate()
+            maxCometSpawnRate = getMaxSpawnRate()
+        }
+    }
+    
     func getCometSpeed() -> Double {
         return Double(GameManager.instance.randomBetweenNumbers(firstNumber: CGFloat(minCometSpeed), secoundeNoumber: CGFloat(maxCometSpeed)))
     }
@@ -40,5 +66,51 @@ class CometManager {
     func getCometSpawnRate() -> Double {
         return Double(GameManager.instance.randomBetweenNumbers(firstNumber: CGFloat(minCometSpawnRate), secoundeNoumber: CGFloat(maxCometSpawnRate)))
     }
+    
+    func spawningRateIncrese() {
+        minCometSpawnRate -= minCometSpawnRate * procent
+        maxCometSpawnRate -= maxCometSpawnRate * procent
+    }
+    
+    func speedIncrese() {
+        minCometSpeed += minCometSpeed * procent
+        maxCometSpeed += maxCometSpeed * procent
+    }
+    
+    
+    
+    //////////////////
+    //Saving things///
+    //////////////////
+    // seting and getting comet speed
+    func setMinCometSpeed(speed: Double) {
+        UserDefaults.standard.set(speed, forKey: "MinCometSpeed")
+    }
+    func getMinCometSpeed() -> Double {
+        return UserDefaults.standard.double(forKey: "MinCometSpeed")
+    }
+    func setMaxCometSpeed(speed: Double) {
+        UserDefaults.standard.set(speed, forKey: "MaxCometSpeed")
+    }
+    func getMaxCometSpeed() -> Double {
+        return UserDefaults.standard.double(forKey: "MaxCometSpeed")
+    }
+    
+    
+    // seting and getting comet spawn rate
+    func setMinSpawnRate(spawnRate: Double) {
+        UserDefaults.standard.set(spawnRate, forKey: "MinCometSpawnRate")
+    }
+    func getMinSpawnRate() -> Double {
+        return UserDefaults.standard.double(forKey: "MinCometSpawnRate")
+    }
+    func setMaxSpawnRate(spawnRate: Double) {
+        UserDefaults.standard.set(spawnRate, forKey: "MaxCometSpawnRate")
+    }
+    func getMaxSpawnRate() -> Double {
+        return UserDefaults.standard.double(forKey: "MaxCometSpawnRate")
+    }
+
+    
     
 }
