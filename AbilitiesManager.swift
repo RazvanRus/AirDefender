@@ -15,7 +15,7 @@ class AbilitiesManager {
     static let instance = AbilitiesManager()
     private init() {}
     
-    var abilityStartCost = 50
+    var abilityStartCost = 5
     var abilities = [Ability]()
 
 

@@ -16,7 +16,7 @@ struct ColliderType {
 class Spaceship: SKSpriteNode {
     
     var move = SKAction()
-    var shipSpeed = 0.4
+    var shipSpeed = GameManager.instance.getShipSpeed()
     
     func initialize() {
         createSpaceship()

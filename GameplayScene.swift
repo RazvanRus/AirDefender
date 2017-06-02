@@ -26,7 +26,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     // score variables
     var scoreTimer = Timer()
     var score = 0
-    var scoreSpeed = 0.5
+    var scoreSpeed = GameManager.instance.getSpeedForScore()
     var scoreLabel = SKLabelNode()
     
     // obstacles variables
@@ -52,6 +52,17 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         createLabels()
         
         changeBackground()
+        
+        printStufs()
+    }
+    
+    func printStufs() {
+        print(CometManager.instance.getMinCometSpeed())
+        print(CometManager.instance.getMaxCometSpeed())
+        print(CometManager.instance.getMinSpawnRate())
+        print(CometManager.instance.getMaxSpawnRate())
+        print(GameManager.instance.getSpaceshipSpeed())
+        print(GameManager.instance.getScoreSpeed())
     }
     
     

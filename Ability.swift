@@ -49,6 +49,8 @@ class Ability: SKSpriteNode {
     
     func createLabelsAndButton() {
         
+        self.removeAllChildren()    
+        
         nameLabel = SKLabelNode()
         nameLabel.name = "NameLabel"
         nameLabel.position = CGPoint(x: -100, y: 40)
