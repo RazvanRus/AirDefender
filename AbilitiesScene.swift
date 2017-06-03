@@ -67,19 +67,19 @@ class AbilitiesScene: SKScene {
                     switch name! {
                     case "CostButtonComets Spawn Ability":
                         if checkForAbilityPoints(ability: name!) {
-                            CometManager.instance.setMinSpawnRate(spawnRate: CometManager.instance.getMinSpawnRate() * 1.05)
-                            CometManager.instance.setMaxSpawnRate(spawnRate: CometManager.instance.getMaxSpawnRate() * 1.05)
+                            CometManager.instance.setMinSpawnRate(spawnRate: CometManager.instance.getMinSpawnRate() * 1.1)
+                            CometManager.instance.setMaxSpawnRate(spawnRate: CometManager.instance.getMaxSpawnRate() * 1.1)
                             upgradeAbility(ability: name!)
                         }
                     case "CostButtonComets Speed Ability":
                         if checkForAbilityPoints(ability: name!) {
-                            CometManager.instance.setMaxCometSpeed(speed: CometManager.instance.getMaxCometSpeed() * 0.95)
-                            CometManager.instance.setMinCometSpeed(speed: CometManager.instance.getMinCometSpeed() * 0.95)
+                            CometManager.instance.setMaxCometSpeed(speed: CometManager.instance.getMaxCometSpeed() * 0.90)
+                            CometManager.instance.setMinCometSpeed(speed: CometManager.instance.getMinCometSpeed() * 0.90)
                             upgradeAbility(ability: name!)
                         }
                     case "CostButtonScore Speed Ability":
                         if checkForAbilityPoints(ability: name!) {
-                            GameManager.instance.setScoreSpeed(speed: GameManager.instance.getScoreSpeed() * 0.95)
+                            GameManager.instance.setScoreSpeed(speed: GameManager.instance.getScoreSpeed() * 0.90)
                             upgradeAbility(ability: name!)
                         }
                     case "CostButtonShip Speed Ability":

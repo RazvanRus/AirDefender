@@ -29,12 +29,17 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     var scoreSpeed = GameManager.instance.getSpeedForScore()
     var scoreLabel = SKLabelNode()
     
+    var stageLabel = SKLabelNode()
+    
     // obstacles variables
     var spawnObstacleTimer = Timer()
     var comets = [Comet]()
     
-    
-    
+    // comet parameters when you pass a stage
+    var minCometSpeed = Double()
+    var maxCometSpeed = Double()
+    var minCometSpawnRate = Double()
+    var maxCometSpawnRate = Double()
     
     
     
@@ -118,6 +123,10 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(0.5), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
             
         }else if isEndGame {
+            scoreTimer.invalidate()
+            self.removeAllChildren()
+            self.removeAllActions()
+            
             let scene = MainMenuScene(fileNamed: "MainMenuScene")
             // Set the scale mode to scale to fit the window
             scene?.scaleMode = .aspectFill
@@ -228,6 +237,13 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.text = "\(score)"
         
         self.addChild(scoreLabel)
+        
+        stageLabel.zPosition = 4
+        stageLabel.position = CGPoint(x: 250, y: 560)
+        stageLabel.fontSize = 60
+        stageLabel.text = "Stage :\(GameManager.instance.getStage())"
+        
+        self.addChild(stageLabel)
     
     }
     
@@ -235,8 +251,46 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     func incrementScore() {
         score += 1
         scoreLabel.text = "\(score)"
+        
+        if score > 90 {
+            checkIfAlmostPassStage()
+            checkIfPassStage()
+        }
     }
     
+    func checkIfAlmostPassStage() {
+        let stageAsDobule = (Double(score))/100.0
+        if floor((Double(score))/100.0) == stageAsDobule {
+            print("It Almost Pass \(score)")
+            prepareForPassStage()
+        }
+    }
+    
+    func prepareForPassStage() {
+        minCometSpeed = CometManager.instance.minCometSpeed
+        maxCometSpeed = CometManager.instance.maxCometSpeed
+        minCometSpawnRate = CometManager.instance.minCometSpawnRate
+        maxCometSpawnRate = CometManager.instance.maxCometSpawnRate
+    }
+    
+    func checkIfPassStage() {
+        let stageAsDobule = (Double(score-25))/100.0
+        if floor((Double(score-25))/100.0) == stageAsDobule {
+            print("It pass \(score)")
+            increseStage()
+        }
+    }
+    
+    func increseStage() {
+        GameManager.instance.setStage(stage: GameManager.instance.getStage() + 1)
+        stageLabel.text = "Stage :\(GameManager.instance.getStage())"
+        
+        CometManager.instance.setMinCometSpeed(speed: minCometSpeed)
+        CometManager.instance.setMaxCometSpeed(speed: maxCometSpeed)
+        CometManager.instance.setMinSpawnRate(spawnRate: minCometSpawnRate)
+        CometManager.instance.setMaxSpawnRate(spawnRate: maxCometSpawnRate)
+        
+    }
     
     // spawning obstacles
     func spawnObstacles() {
@@ -271,7 +325,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     func playerHitByComet() {
         
         if !isGamePaused {
-            AbilitiesManager.instance.setAbilityPoints(points: AbilitiesManager.instance.getAbilityPoints() + score)
+            AbilitiesManager.instance.setAbilityPoints(points: AbilitiesManager.instance.getAbilityPoints() + (GameManager.instance.getStage()+1) * score)
         }
         
         createEndGamePannel()

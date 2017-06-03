@@ -79,6 +79,13 @@ class GameManager {
         return UserDefaults.standard.double(forKey: "ScoreSpeed")
     }
     
+    func setStage(stage: Int) {
+        UserDefaults.standard.set(stage, forKey: "GameStage")
+    }
+    func getStage() -> Int {
+        return UserDefaults.standard.integer(forKey: "GameStage")
+    }
+    
     
     
     // a random function between two numbers
