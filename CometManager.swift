@@ -15,7 +15,7 @@ class CometManager {
     static let instance = CometManager()
     private init() {}
     
-    var procent = 0.05
+    var procent = 0.01
     
     var minCometSpeed = 750.0
     var maxCometSpeed = 1750.0

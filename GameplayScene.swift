@@ -33,7 +33,9 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     // obstacles variables
     var spawnObstacleTimer = Timer()
+    var spawnAgentTimer = Timer()
     var comets = [Comet]()
+    var agents = [Agent]()
     
     // comet parameters when you pass a stage
     var minCometSpeed = Double()
@@ -66,7 +68,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         print(CometManager.instance.getMaxCometSpeed())
         print(CometManager.instance.getMinSpawnRate())
         print(CometManager.instance.getMaxSpawnRate())
-        print(GameManager.instance.getSpaceshipSpeed())
+        print(SpaceshipManager.instance.getSpaceshipSpeed())
         print(GameManager.instance.getScoreSpeed())
     }
     
@@ -85,6 +87,14 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func verifyAgents() {
+        for agent in agents {
+            if agent.position.y < -749 {
+                agent.removeFromParent()
+            }
+        }
+    }
+    
     
     func pauseComets() {
         for comet in comets {
@@ -92,9 +102,21 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func pauseAgents() {
+        for agent in agents {
+            agent.gameIsPause()
+        }
+    }
+    
     func startComet() {
         for comet in comets {
             comet.gameIsUnpaused()
+        }
+    }
+    
+    func startAgents() {
+        for agent in agents {
+            agent.gameIsUnpaused()
         }
     }
     
@@ -118,9 +140,12 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             scoreTimer = Timer.scheduledTimer(timeInterval: TimeInterval(scoreSpeed), target: self, selector: #selector(GameplayScene.incrementScore), userInfo: nil, repeats: true)
             
             startComet()
+            startAgents()
             
             spawnObstacleTimer.invalidate()
             spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(0.5), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
+            spawnAgentTimer.invalidate()
+            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(AgentManager.instance.getAgentSpawnRate()), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
             
         }else if isEndGame {
             scoreTimer.invalidate()
@@ -141,6 +166,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         noOfTouches -= 1
         if noOfTouches == 0 {
             pauseComets()
+            pauseAgents()
             isGamePaused = true
             alreadyTouching = false
             scoreTimer.invalidate()
@@ -148,6 +174,10 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             //scene?.isPaused = true
             spawnObstacleTimer.invalidate()
             spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
+
+            spawnAgentTimer.invalidate()
+            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(AgentManager.instance.getAgentSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
+            
             spaceShip.removeAllActions()
         }
     }
@@ -165,6 +195,9 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             let moveY = y2-y1
             
             spaceShip.moveBy(x: moveX,y: moveY)
+            
+            SpaceshipManager.instance.curentX = spaceShip.position.x
+            SpaceshipManager.instance.curentY = spaceShip.position.y
         }
     }
     ///////////////////////////////
@@ -194,6 +227,16 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         if firstBody.node?.name == "Spaceship" && secoundBody.node?.name == "Comet" {
             playerHitByComet()
         }
+        if firstBody.node?.name == "Spaceship" && secoundBody.node?.name == "Agent" {
+            playerHitByComet()
+        }
+        if firstBody.node?.name == "Agent" && secoundBody.node?.name == "Comet" {
+            firstBody.node?.removeFromParent()
+        }
+        if firstBody.node?.name == "Comet" && secoundBody.node?.name == "Agent" {
+            secoundBody.node?.removeFromParent()
+        }
+        
     }
     ///////////////////////////////
     //// End Contact Functions ////
@@ -294,6 +337,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     // spawning obstacles
     func spawnObstacles() {
+        
         let comet = Comet(imageNamed: "circle")
         comet.initialize()
         self.addChild(comet)
@@ -306,13 +350,39 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         
         // verify the comets and remove the bad ones.
         verifyComets()
-
+        
         
         // calling timer for next obstacle spawn
         if isGamePaused {
             spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
         }else {
             spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
+        }
+    }
+    
+    // spawning agents
+    func spawnAgents() {
+        
+        
+        let agent = Agent()
+        agent.initialize()
+        self.addChild(agent)
+        if !isGamePaused {
+            agent.performMove()
+        }else {
+            agent.gameIsPause()
+        }
+        agents.append(agent)
+        
+        // verify the comets and remove the bad ones.
+        verifyAgents()
+        
+        
+        // calling timer for next obstacle spawn
+        if isGamePaused {
+            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(AgentManager.instance.getAgentSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
+        }else {
+            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(AgentManager.instance.getAgentSpawnRate()), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
         }
     }
     
@@ -334,6 +404,8 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         scoreTimer.invalidate()
         scene?.isPaused = true
         spawnObstacleTimer.invalidate()
+        spawnAgentTimer.invalidate()
+        spawnAgentTimer.invalidate()
         spaceShip.removeAllActions()
         
 
@@ -362,7 +434,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         endGamePannel.color = SKColor.black
         endGamePannel.alpha = 0.95
         
-        
+            
         let endGameLabel = SKLabelNode()
         endGameLabel.name = "EndGamePannelLabel"
         endGameLabel.position = CGPoint(x: 0, y: 50)

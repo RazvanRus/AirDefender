@@ -36,8 +36,8 @@ class Comet: SKSpriteNode {
         self.physicsBody?.affectedByGravity = false
         self.physicsBody?.allowsRotation = false
         self.physicsBody?.categoryBitMask = ColliderType.Obstacle
-        self.physicsBody?.collisionBitMask = ColliderType.Player
-        self.physicsBody?.contactTestBitMask = ColliderType.Player
+        self.physicsBody?.collisionBitMask = ColliderType.Player | ColliderType.Obstacle
+        self.physicsBody?.contactTestBitMask = ColliderType.Player | ColliderType.Obstacle
     }
     
     func performMove() {

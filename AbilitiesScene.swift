@@ -84,7 +84,7 @@ class AbilitiesScene: SKScene {
                         }
                     case "CostButtonShip Speed Ability":
                         if checkForAbilityPoints(ability: name!) {
-                            GameManager.instance.setSpaceshipSpeed(speed: GameManager.instance.getSpaceshipSpeed() * 0.95)
+                            SpaceshipManager.instance.setSpaceshipSpeed(speed: SpaceshipManager.instance.getSpaceshipSpeed() * 0.95)
                             upgradeAbility(ability: name!)
                         }
                     default:

@@ -37,14 +37,7 @@ class GameManager {
         }
     }
     
-    func getShipSpeed() -> Double {
-        if getSpaceshipSpeed() > 0.0 {
-            return getSpaceshipSpeed()
-        }else {
-            setSpaceshipSpeed(speed: 0.4)
-            return getSpaceshipSpeed()
-        }
-    }
+
     
     func getSpeedForScore() -> Double {
         if getScoreSpeed() > 0.0 {
@@ -64,13 +57,7 @@ class GameManager {
         return UserDefaults.standard.integer(forKey: "Highscore")
     }
 
-    
-    func setSpaceshipSpeed(speed: Double) {
-        UserDefaults.standard.set(speed, forKey: "ShipSpeed")
-    }
-    func getSpaceshipSpeed() -> Double {
-        return UserDefaults.standard.double(forKey: "ShipSpeed")
-    }
+
     
     func setScoreSpeed(speed: Double) {
         UserDefaults.standard.set(speed, forKey: "ScoreSpeed")
