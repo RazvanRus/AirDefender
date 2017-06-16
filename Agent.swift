@@ -17,7 +17,7 @@ class Agent : SKSpriteNode  {
     
     var isGamePaused = false
     
-    func initialize() {
+    func initialize() {        
         createAgent()
         Timer.scheduledTimer(timeInterval: TimeInterval(0.1), target: self, selector: #selector(Agent.observe), userInfo: nil, repeats: true)
     }
@@ -27,9 +27,11 @@ class Agent : SKSpriteNode  {
         verifyPosition()
         let distance = calculateDistanceToPlayer(location: self.position)
 
-        self.removeAction(forKey: "MoveToPlayer")
         
         if distance < 500 {
+            
+            self.removeAction(forKey: "MoveToPlayer")
+
             self.removeAction(forKey: "Move")
             if isGamePaused {
                 moveToPlayer = SKAction.move(to: CGPoint(x: SpaceshipManager.instance.curentX, y: SpaceshipManager.instance.curentY), duration: (Double(distance)/(agentSpeed))*GameManager.instance.pauseMultiplier)
@@ -49,7 +51,7 @@ class Agent : SKSpriteNode  {
     }
     
     func verifyPosition() {
-        if self.position.y < -749 {
+        if self.position.y < AgentManager.instance.agentEndingPointY+1 {
             self.removeFromParent()
         }
     }
@@ -69,6 +71,16 @@ class Agent : SKSpriteNode  {
         self.physicsBody?.categoryBitMask = ColliderType.Obstacle
         self.physicsBody?.collisionBitMask = ColliderType.Player | ColliderType.Obstacle
         self.physicsBody?.contactTestBitMask = ColliderType.Player | ColliderType.Obstacle
+        
+        let distanceCircle = SKSpriteNode(imageNamed: "distanceCircle")
+        distanceCircle.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        distanceCircle.zPosition = 3
+        distanceCircle.position = CGPoint(x: 0, y: 0)
+        distanceCircle.size = CGSize(width: 900, height: 900)
+        distanceCircle.alpha = 0.02
+        self.addChild(distanceCircle)
+        
+        
     }
     
     func performMove() {

@@ -16,7 +16,9 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     var spaceShip = Spaceship()
     
     var noOfTouches = 0
-
+    
+    var agentTimer = AgentManager.instance.getAgentSpawnRate()
+    var agentDecrementTimer = Timer()
 
     // game stage variables
     var isEndGame = false
@@ -63,6 +65,15 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         printStufs()
     }
     
+    func agentTimerDecrement() {
+        agentTimer -= 1.0
+        if isGamePaused {
+            agentDecrementTimer = Timer.scheduledTimer(timeInterval: TimeInterval(1*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.agentTimerDecrement), userInfo: nil, repeats: false)
+        } else {
+            agentDecrementTimer = Timer.scheduledTimer(timeInterval: TimeInterval(1), target: self, selector: #selector(GameplayScene.agentTimerDecrement), userInfo: nil, repeats: false)
+        }
+    }
+    
     func printStufs() {
         print(CometManager.instance.getMinCometSpeed())
         print(CometManager.instance.getMaxCometSpeed())
@@ -89,7 +100,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     func verifyAgents() {
         for agent in agents {
-            if agent.position.y < -749 {
+            if agent.position.y < AgentManager.instance.agentEndingPointY+1 {
                 agent.removeFromParent()
             }
         }
@@ -144,8 +155,12 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             
             spawnObstacleTimer.invalidate()
             spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(0.5), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
+            
             spawnAgentTimer.invalidate()
-            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(AgentManager.instance.getAgentSpawnRate()), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
+            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(agentTimer), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
+            
+            agentDecrementTimer.invalidate()
+            agentDecrementTimer = Timer.scheduledTimer(timeInterval: TimeInterval(1), target: self, selector: #selector(GameplayScene.agentTimerDecrement), userInfo: nil, repeats: false)
             
         }else if isEndGame {
             scoreTimer.invalidate()
@@ -169,14 +184,19 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
             pauseAgents()
             isGamePaused = true
             alreadyTouching = false
+            
             scoreTimer.invalidate()
             scoreTimer = Timer.scheduledTimer(timeInterval: TimeInterval(scoreSpeed*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.incrementScore), userInfo: nil, repeats: true)
             //scene?.isPaused = true
+            
             spawnObstacleTimer.invalidate()
             spawnObstacleTimer = Timer.scheduledTimer(timeInterval: TimeInterval(CometManager.instance.getCometSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnObstacles), userInfo: nil, repeats: false)
 
             spawnAgentTimer.invalidate()
-            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(AgentManager.instance.getAgentSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
+            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(agentTimer*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
+            
+            agentDecrementTimer.invalidate()
+            agentDecrementTimer = Timer.scheduledTimer(timeInterval: TimeInterval(1*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.agentTimerDecrement), userInfo: nil, repeats: false)
             
             spaceShip.removeAllActions()
         }
@@ -362,9 +382,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     
     // spawning agents
     func spawnAgents() {
-        
-        
-        let agent = Agent()
+        let agent = Agent(imageNamed: "purpleCircle")
         agent.initialize()
         self.addChild(agent)
         if !isGamePaused {
@@ -377,12 +395,12 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         // verify the comets and remove the bad ones.
         verifyAgents()
         
-        
+        agentTimer = AgentManager.instance.getAgentSpawnRate()
         // calling timer for next obstacle spawn
         if isGamePaused {
-            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(AgentManager.instance.getAgentSpawnRate()*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
+            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(agentTimer*GameManager.instance.pauseMultiplier), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
         }else {
-            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(AgentManager.instance.getAgentSpawnRate()), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
+            spawnAgentTimer = Timer.scheduledTimer(timeInterval: TimeInterval(agentTimer), target: self, selector: #selector(GameplayScene.spawnAgents), userInfo: nil, repeats: false)
         }
     }
     
@@ -450,7 +468,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         endGameScoreLabel.fontSize = 120
         endGameScoreLabel.fontColor = SKColor.white
         endGameScoreLabel.alpha = 0.8
-        endGameScoreLabel.text = "\(score)"
+        endGameScoreLabel.text = "\(((GameManager.instance.getStage()+1) * score))"
         endGamePannel.addChild(endGameScoreLabel)
         
         let endGameQuitLabel = SKLabelNode()

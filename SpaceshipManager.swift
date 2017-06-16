@@ -16,6 +16,15 @@ class SpaceshipManager {
     var curentX = CGFloat(0.0)
     var curentY = CGFloat(0.0)
     
+    func prestige() {
+        var spaceshipSpeed = 0.4
+        let level = AbilitiesManager.instance.getAbilityLevel(abilityName: "Ship Speed Ability")
+        
+        for _ in 0...level-1 {
+            spaceshipSpeed = spaceshipSpeed * 0.95
+        }
+        setSpaceshipSpeed(speed: spaceshipSpeed)
+    }
     
     func getShipSpeed() -> Double {
         if getSpaceshipSpeed() > 0.0 {

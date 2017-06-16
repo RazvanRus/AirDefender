@@ -20,6 +20,7 @@ class AbilitiesScene: SKScene {
         initializeAbilities()
         displayAbilityes()
         displayButton()
+        createAbilityPointsLabel()
     }
     
     func displayAbilityes() {
@@ -50,6 +51,15 @@ class AbilitiesScene: SKScene {
         self.addChild(exitButton)
     }
     
+    func createAbilityPointsLabel() {
+        let abilityPointsLabael = SKLabelNode()
+        abilityPointsLabael.zPosition = 4
+        abilityPointsLabael.position = CGPoint(x: 0, y: 560)
+        abilityPointsLabael.fontSize = 90
+        abilityPointsLabael.text = "\(AbilitiesManager.instance.getAbilityPoints())"
+        
+        self.addChild(abilityPointsLabael)
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {

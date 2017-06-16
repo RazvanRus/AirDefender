@@ -22,10 +22,10 @@ class AgentManager {
     var maxAgentStartingPointX = CGFloat(300)
     
     var agentStartingPointY = CGFloat(750)
-    var agentEndingPointY = CGFloat(-750)
+    var agentEndingPointY = CGFloat(-1200)
     
-    var minAgentSpawnRate = 2.0
-    var maxAgentSpawnRate = 4.0
+    var minAgentSpawnRate = 4.0
+    var maxAgentSpawnRate = 8.0
     
     var agentSpeed = 450.0
     

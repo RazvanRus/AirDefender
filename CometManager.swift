@@ -31,6 +31,31 @@ class CometManager {
     var minCometSpawnRate = 0.75
     var maxCometSpawnRate = 1.5
 
+    func prestige() {
+        minCometSpeed = 750.0
+        maxCometSpeed = 1750.0
+        
+        var level = AbilitiesManager.instance.getAbilityLevel(abilityName: "Comets Speed Ability")
+        
+        for _ in 0...level-1 {
+            minCometSpeed = minCometSpeed * 0.95
+            maxCometSpeed = maxCometSpeed * 0.95
+        }
+        setMinCometSpeed(speed: minCometSpeed)
+        setMaxCometSpeed(speed: maxCometSpeed)
+        
+        minCometSpawnRate = 0.75
+        maxCometSpawnRate = 1.5
+        
+        level = AbilitiesManager.instance.getAbilityLevel(abilityName: "Comets Spawn Ability")
+        
+        for _ in 0...level-1 {
+            minCometSpawnRate = minCometSpawnRate * 1.05
+            maxCometSpawnRate = maxCometSpawnRate * 1.05
+        }
+        setMinSpawnRate(spawnRate: minCometSpawnRate)
+        setMaxSpawnRate(spawnRate: maxCometSpawnRate)
+    }
     
     func reset()  {
         procent = 0.01

@@ -22,9 +22,9 @@ class MainMenuScene: SKScene {
     func createAbilityPointsLabel() {
         let abilityPointsLabael = SKLabelNode()
         abilityPointsLabael.zPosition = 4
-        abilityPointsLabael.position = CGPoint(x: 0, y: 560)
-        abilityPointsLabael.fontSize = 90
-        abilityPointsLabael.text = "\(AbilitiesManager.instance.getAbilityPoints())"
+        abilityPointsLabael.position = CGPoint(x: 0, y: 450)
+        abilityPointsLabael.fontSize = 100
+        abilityPointsLabael.text = "Air Defender"
         
         self.addChild(abilityPointsLabael)
     }
@@ -47,6 +47,14 @@ class MainMenuScene: SKScene {
                 
                 // Present the scene
                 view?.presentScene(scene)
+            }
+            if atPoint(touch.location(in: self)).name == "Prestige" {
+                if GameManager.instance.getStage() > 1 {
+                    AbilitiesManager.instance.setAbilityPoints(points: AbilitiesManager.instance.getAbilityPoints() + (GameManager.instance.getStage()+1) * 100 * (GameManager.instance.getStage()+1))
+                    GameManager.instance.prestige()
+                    CometManager.instance.prestige()
+                    SpaceshipManager.instance.prestige()
+                }
             }
         }
     }

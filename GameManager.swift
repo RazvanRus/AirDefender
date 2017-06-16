@@ -37,6 +37,16 @@ class GameManager {
         }
     }
     
+    func prestige() {
+        var scoreSpeed = 0.5
+        let level = AbilitiesManager.instance.getAbilityLevel(abilityName: "Score Speed Ability")
+        
+        for _ in 0...level-1 {
+            scoreSpeed = scoreSpeed * 0.90
+        }
+        setScoreSpeed(speed: scoreSpeed)
+        setStage(stage: 0)
+    }
 
     
     func getSpeedForScore() -> Double {
