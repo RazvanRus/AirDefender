@@ -13,7 +13,7 @@ class Agent : SKSpriteNode  {
     var moveToPlayer = SKAction()
     
     var endingPoint = CGFloat(AgentManager.instance.getAgentPointX())
-    var agentSpeed = AgentManager.instance.agentSpeed
+    var agentSpeed = CometManager.instance.getCometSpeed()
     
     var isGamePaused = false
     
@@ -28,7 +28,7 @@ class Agent : SKSpriteNode  {
         let distance = calculateDistanceToPlayer(location: self.position)
 
         
-        if distance < 500 {
+        if distance < 150 {
             
             self.removeAction(forKey: "MoveToPlayer")
 
@@ -62,7 +62,7 @@ class Agent : SKSpriteNode  {
         self.color = SKColor.purple
         self.zPosition = 4
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        let agentSize = AgentManager.instance.agentSize
+        let agentSize = CometManager.instance.getCometSize()
         self.size = CGSize(width: agentSize, height: agentSize)
         self.position = CGPoint(x: CGFloat(AgentManager.instance.getAgentPointX()), y: AgentManager.instance.agentStartingPointY)
         self.physicsBody = SKPhysicsBody(circleOfRadius: self.size.width/2)
@@ -76,8 +76,8 @@ class Agent : SKSpriteNode  {
         distanceCircle.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         distanceCircle.zPosition = 3
         distanceCircle.position = CGPoint(x: 0, y: 0)
-        distanceCircle.size = CGSize(width: 900, height: 900)
-        distanceCircle.alpha = 0.02
+        distanceCircle.size = CGSize(width: 200, height: 200)
+        distanceCircle.alpha = 0.05
         self.addChild(distanceCircle)
         
         

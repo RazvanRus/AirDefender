@@ -19,6 +19,10 @@ class MainMenuScene: SKScene {
         createAbilityPointsLabel()
     }
     
+    override func update(_ currentTime: TimeInterval) {
+        moveBackground()
+    }
+    
     func createAbilityPointsLabel() {
         let abilityPointsLabael = SKLabelNode()
         abilityPointsLabael.zPosition = 4
@@ -59,5 +63,15 @@ class MainMenuScene: SKScene {
         }
     }
     
-    
+    func moveBackground() {
+        enumerateChildNodes(withName: "BG", using: ({
+            (node, error) in
+            
+            node.position.y -= 1;
+            
+            if node.position.y < -(self.frame.height) {
+                node.position.y += self.frame.height * 3
+            }
+        }))
+    }
 }

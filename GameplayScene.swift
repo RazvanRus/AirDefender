@@ -57,6 +57,8 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.contactDelegate = self
         //scene?.isPaused = false
         
+        
+        
         createSpaceship()
         createLabels()
         
@@ -134,6 +136,7 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     /// update frame function
     override func update(_ currentTime: TimeInterval) {
         verifyShip()
+        moveBackground()
     }
     
     ///////////////////////////////
@@ -262,7 +265,22 @@ class GameplayScene: SKScene, SKPhysicsContactDelegate {
     //// End Contact Functions ////
     ///////////////////////////////
     
-    
+    // move background
+    func moveBackground() {
+        enumerateChildNodes(withName: "BG", using: ({
+            (node, error) in
+            
+            if self.isGamePaused {
+                node.position.y -= CGFloat(3 / GameManager.instance.pauseMultiplier);
+            } else {
+                node.position.y -= 3;
+            }
+            
+            if node.position.y < -(self.frame.height) {
+                node.position.y += self.frame.height * 3
+            }
+        }))
+    }
     
     
     

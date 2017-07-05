@@ -18,7 +18,7 @@ class CometManager {
     var procent = 0.01
     
     var minCometSpeed = 750.0
-    var maxCometSpeed = 1750.0
+    var maxCometSpeed = 1500.0
     
     var startingPointMinX = CGFloat(-325)
     var startingPointMaxX = CGFloat(325)
@@ -33,7 +33,7 @@ class CometManager {
 
     func prestige() {
         minCometSpeed = 750.0
-        maxCometSpeed = 1750.0
+        maxCometSpeed = 1500.0
         
         var level = AbilitiesManager.instance.getAbilityLevel(abilityName: "Comets Speed Ability")
         
@@ -61,7 +61,7 @@ class CometManager {
         procent = 0.01
         if getMinCometSpeed() == 0 {
             minCometSpeed = 750.0
-            maxCometSpeed = 1750.0
+            maxCometSpeed = 1500.0
         
             minCometSpawnRate = 0.75
             maxCometSpawnRate = 1.5
