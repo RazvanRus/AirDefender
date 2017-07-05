@@ -10,6 +10,8 @@ import SpriteKit
 
 class AbilitiesScene: SKScene {
     
+    var inDialog = false
+    
     override func didMove(to view: SKView) {
         //self.removeAllChildren()
         //self.removeAllActions()
@@ -34,7 +36,7 @@ class AbilitiesScene: SKScene {
             ability.name = ability.abilityName
             ability.anchorPoint = CGPoint(x: 0.5, y: 0.5)
             ability.zPosition = 3
-            ability.alpha = 0.9
+            ability.alpha = 0.85
             ability.size = CGSize(width: 500, height: 150)
             ability.position = CGPoint(x: 0, y: (-200*index)+100)
             
@@ -114,6 +116,14 @@ class AbilitiesScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if inDialog {
+            let scene = AbilitiesScene(fileNamed: "AbilitiesScene")
+            // Set the scale mode to scale to fit the window
+            scene?.scaleMode = .aspectFill
+            
+            // Present the scene
+            view?.presentScene(scene)
+        }
         for touch in touches {
             if atPoint(touch.location(in: self)).name == "exit" {
                 let scene = MainMenuScene(fileNamed: "MainMenuScene")
@@ -132,22 +142,30 @@ class AbilitiesScene: SKScene {
                             CometManager.instance.setMinSpawnRate(spawnRate: CometManager.instance.getMinSpawnRate() * 1.1)
                             CometManager.instance.setMaxSpawnRate(spawnRate: CometManager.instance.getMaxSpawnRate() * 1.1)
                             upgradeAbility(ability: name!)
+                        } else {
+                            createNotEnoughtPointsDialog()
                         }
                     case "CostButtonComets Speed Ability":
                         if checkForAbilityPoints(ability: name!) {
                             CometManager.instance.setMaxCometSpeed(speed: CometManager.instance.getMaxCometSpeed() * 0.90)
                             CometManager.instance.setMinCometSpeed(speed: CometManager.instance.getMinCometSpeed() * 0.90)
                             upgradeAbility(ability: name!)
+                        } else {
+                            createNotEnoughtPointsDialog()
                         }
                     case "CostButtonScore Speed Ability":
                         if checkForAbilityPoints(ability: name!) {
                             GameManager.instance.setScoreSpeed(speed: GameManager.instance.getScoreSpeed() * 0.90)
                             upgradeAbility(ability: name!)
+                        } else {
+                            createNotEnoughtPointsDialog()
                         }
                     case "CostButtonShip Speed Ability":
                         if checkForAbilityPoints(ability: name!) {
                             SpaceshipManager.instance.setSpaceshipSpeed(speed: SpaceshipManager.instance.getSpaceshipSpeed() * 0.95)
                             upgradeAbility(ability: name!)
+                        } else {
+                            createNotEnoughtPointsDialog()
                         }
                     default:
                         print("")
@@ -185,6 +203,43 @@ class AbilitiesScene: SKScene {
         }
     }
 
+    func createNotEnoughtPointsDialog() {
+        self.removeAllActions()
+        self.removeAllChildren()
+        inDialog = true
+        let dialogPannel = SKSpriteNode()
+        
+        dialogPannel.name = "DialogPannel"
+        dialogPannel.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        dialogPannel.position = CGPoint(x: 0, y: 0)
+        dialogPannel.size = CGSize(width: 750, height: 1334)
+        dialogPannel.zPosition = 10
+        dialogPannel.color = SKColor.black
+        dialogPannel.alpha = 0.95
+        
+        
+        let dialogLabel = SKLabelNode()
+        dialogLabel.name = "DialogLabel"
+        dialogLabel.position = CGPoint(x: 0, y: 50)
+        dialogLabel.fontSize = 80
+        dialogLabel.fontColor = SKColor.white
+        dialogLabel.alpha = 0.8
+        dialogLabel.text = "Not enought points."
+        dialogPannel.addChild(dialogLabel)
+        
+        
+        let dialogQuitLabel = SKLabelNode()
+        dialogQuitLabel.name = "DialogQuitLabel"
+        dialogQuitLabel.position = CGPoint(x: 0, y: -200)
+        dialogQuitLabel.fontSize = 90
+        dialogQuitLabel.fontColor = SKColor.white
+        dialogQuitLabel.alpha = 0.6
+        dialogQuitLabel.text = "Tap to exit"
+        dialogPannel.addChild(dialogQuitLabel)
+        
+        self.addChild(dialogPannel)
+
+    }
     
     func initializeAbilities() {
         if AbilitiesManager.instance.abilities.isEmpty {
